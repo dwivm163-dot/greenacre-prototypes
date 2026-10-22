@@ -3,16 +3,388 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>The Illusion of Escape</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Illusion of Escape | Interactive Prototypes</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #f6f7f1;
+      --green: #24483d;
+      --muted: #708076;
+      --line: #dbe2d8;
+      --card: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--green);
+      font-family: "DM Sans", sans-serif;
+    }
+
+    .container {
+      max-width: 1120px;
+      margin: auto;
+      padding: 55px 35px 80px;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding-bottom: 25px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .eyebrow {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .topright {
+      font-size: 12px;
+      color: var(--muted);
+      text-align: right;
+      line-height: 1.7;
+    }
+
+    .hero {
+      padding: 85px 0 65px;
+      max-width: 850px;
+    }
+
+    h1 {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: clamp(55px, 8vw, 100px);
+      font-weight: 400;
+      letter-spacing: -3px;
+      line-height: 1.05;
+      margin: 0 0 30px;
+    }
+
+    h1 em {
+      font-weight: 400;
+      color: #789885;
+    }
+
+    .description {
+      font-size: 16px;
+      color: #596d62;
+      line-height: 1.85;
+      max-width: 650px;
+    }
+
+    .section-heading {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-heading h2 {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1.8px;
+      margin: 0;
+    }
+
+    .section-heading span {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+    }
+
+    .card {
+      display: flex;
+      flex-direction: column;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      text-decoration: none;
+      color: inherit;
+      transition: transform .25s ease, box-shadow .25s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 18px 45px rgba(36, 72, 61, .11);
+    }
+
+    .visual {
+      height: 235px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .visual-one {
+      background:
+        radial-gradient(circle at 30% 45%, #b7d4d8 0 14%, transparent 15%),
+        radial-gradient(circle at 64% 35%, #bed1b4 0 19%, transparent 20%),
+        radial-gradient(circle at 62% 75%, #e8beb0 0 13%, transparent 14%),
+        #e8efe8;
+    }
+
+    .visual-two {
+      background: #e2e9df;
+    }
+
+    .map-outline {
+      position: relative;
+      width: 68%;
+      height: 70%;
+      border: 1.5px solid #9bad9d;
+      transform: rotate(-5deg);
+      background: rgba(255,255,255,.25);
+    }
+
+    .wave {
+      position: absolute;
+      width: 110px;
+      height: 110px;
+      border: 2px solid #6ea2b6;
+      border-radius: 50%;
+      top: 12%;
+      right: 10%;
+      box-shadow:
+        0 0 0 15px rgba(110,162,182,.12),
+        0 0 0 35px rgba(110,162,182,.09);
+    }
+
+    .route {
+      position: absolute;
+      left: 14%;
+      top: 53%;
+      width: 70%;
+      height: 0;
+      border-top: 3px dashed #c98671;
+      transform: rotate(-22deg);
+    }
+
+    .dot {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: #b36e8b;
+      border-radius: 50%;
+    }
+
+    .dot-a {left: 25%; top: 28%;}
+    .dot-b {left: 31%; top: 34%;}
+    .dot-c {left: 28%; top: 45%;}
+    .dot-d {left: 72%; top: 68%;}
+
+    .dual {
+      display: flex;
+      gap: 12px;
+      width: 78%;
+      height: 70%;
+    }
+
+    .mini-map {
+      flex: 1;
+      position: relative;
+      background: #f5f4eb;
+      border: 1px solid #a9b7a6;
+      overflow: hidden;
+    }
+
+    .mini-map:first-child {
+      background:
+        linear-gradient(35deg, transparent 47%, #d6bd9b 48% 52%, transparent 53%),
+        radial-gradient(circle at 38% 30%, #a7c49d 0 15%, transparent 16%),
+        radial-gradient(circle at 72% 66%, #a7c49d 0 16%, transparent 17%),
+        #f5f4eb;
+    }
+
+    .mini-map:last-child {
+      background:
+        radial-gradient(circle at 65% 30%, transparent 0 12%, #7fb6cf 13% 14%, transparent 15% 23%, #7fb6cf 24% 25%, transparent 26%),
+        radial-gradient(circle at 35% 72%, #c890a4 0 5%, transparent 6%),
+        radial-gradient(circle at 45% 68%, #c890a4 0 5%, transparent 6%),
+        radial-gradient(circle at 30% 60%, #c890a4 0 5%, transparent 6%),
+        #f5f4eb;
+    }
+
+    .card-body {
+      padding: 27px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .number {
+      color: #7d9586;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+    }
+
+    h3 {
+      font-family: "Playfair Display", Georgia, serif;
+      font-size: 29px;
+      font-weight: 400;
+      margin: 14px 0 10px;
+    }
+
+    .card p {
+      font-size: 13px;
+      line-height: 1.8;
+      color: #66776b;
+      margin: 0 0 28px;
+    }
+
+    .open {
+      margin-top: auto;
+      padding-top: 17px;
+      border-top: 1px solid var(--line);
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .arrow {
+      font-size: 22px;
+      transition: transform .25s;
+    }
+
+    .card:hover .arrow {
+      transform: translateX(6px);
+    }
+
+    footer {
+      margin-top: 70px;
+      padding-top: 22px;
+      border-top: 1px solid var(--line);
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+    }
+
+    @media (max-width: 700px) {
+      .container { padding: 25px 20px 45px; }
+      .hero { padding: 65px 0 45px; }
+      h1 { letter-spacing: -2px; }
+      .grid { grid-template-columns: 1fr; }
+      .visual { height: 200px; }
+      footer { flex-direction: column; }
+    }
+  </style>
 </head>
+
 <body>
-  <h1>The Illusion of Escape</h1>
-  <p>Greenacre Park: Interactive Prototypes</p>
+  <div class="container">
 
-  <h2>Prototype 1: Layered Archive</h2>
-  <a href="./layered-archive/">Open Prototype 1</a>
+    <header class="topbar">
+      <div class="eyebrow">City as System / Interactive Research</div>
+      <div class="topright">
+        Greenacre Park, New York City<br>
+        Core Studio + Core Lab Systems
+      </div>
+    </header>
 
-  <h2>Prototype 2: Construct Your Own Escape</h2>
-  <a href="./construct-your-own-escape/">Open Prototype 2</a>
+    <section class="hero">
+      <h1>The Illusion<br>of <em>Escape.</em></h1>
+
+      <p class="description">
+        Greenacre Park appears to offer an escape from the noise and
+        intensity of Midtown. But how much of that tranquility is
+        carefully constructed?
+        <br><br>
+        These two interactive prototypes explore how physical design,
+        sensory conditions, and human behavior come together to
+        produce the atmosphere of an urban park.
+      </p>
+    </section>
+
+    <div class="section-heading">
+      <h2>Explore the Prototypes</h2>
+      <span>02 Interactive Experiments</span>
+    </div>
+
+    <section class="grid">
+
+      <a class="card" href="./layered-archive/">
+        <div class="visual visual-one">
+          <div class="map-outline">
+            <div class="wave"></div>
+            <div class="route"></div>
+            <div class="dot dot-a"></div>
+            <div class="dot dot-b"></div>
+            <div class="dot dot-c"></div>
+            <div class="dot dot-d"></div>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <span class="number">EXPERIMENT 001</span>
+          <h3>The Layered Archive</h3>
+          <p>
+            Investigate Greenacre Park through overlapping sensory
+            observations. Rearrange layers of sound, smell, movement,
+            and social behavior to uncover relationships between
+            visible and invisible systems.
+          </p>
+          <div class="open">
+            Explore Prototype <span class="arrow">↗</span>
+          </div>
+        </div>
+      </a>
+
+      <a class="card" href="./construct-your-own-escape/">
+        <div class="visual visual-two">
+          <div class="dual">
+            <div class="mini-map"></div>
+            <div class="mini-map"></div>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <span class="number">EXPERIMENT 002</span>
+          <h3>Construct Your Own Escape</h3>
+          <p>
+            Rearrange the physical elements of Greenacre Park
+            and watch how sound, movement, social behavior, and
+            other invisible atmospheric conditions respond
+            through a second, linked map.
+          </p>
+          <div class="open">
+            Explore Prototype <span class="arrow">↗</span>
+          </div>
+        </div>
+      </a>
+
+    </section>
+
+    <footer>
+      <span>The Illusion of Escape · Greenacre Park</span>
+      <span>Interactive Prototypes / 2026</span>
+    </footer>
+
+  </div>
 </body>
 </html>
